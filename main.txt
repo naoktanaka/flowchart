@@ -1,0 +1,67 @@
+1	Begin Error Handling; Action: Continue; Options: Take Snapshot, Log to File,  Task Status: Fail
+2	     Comment: ========================= Task Start ===========================================================
+3	     Comment: ========================= Getting Task Name ====================================================
+4	     String Operation: Replace ".*\\([\w]+\.atmx)$" with "$1" in "$AATaskName$" and assign output to $vTaskName$ 
+5	     String Operation: Reverse "$AATaskName$" and assign output to $vTaskName$
+6	     String Operation: Before-After "$vTaskName$"; After: "\" and assign output to $vTaskName$
+7	     String Operation: Reverse "$vTaskName$" and assign output to $vTaskName$
+8	     Comment: ======================== Checking Config File and Reintializing variable ================================
+9	     String Operation: Before-After "$AATaskName$"; Before: "My Tasks\"; After: "All Tasks" and assign output to $vNameOfProcess$
+10	     String Operation: Before-After "$vNameOfProcess$"; After: "$AAApplicationPath$\" and assign output to $vNameOfDepartment$
+11	     String Operation: Before-After "$vNameOfDepartment$"; After: "\" and assign output to $vNameOfDepartment$
+12	     String Operation: Before-After "$vNameOfProcess$"; Before: "\" and assign output to $vNameOfProcess$
+13	     String Operation: Before-After "$vNameOfProcess$"; After: "\" and assign output to $vNameOfProcess$
+14	     String Operation: Replace "\" with "" in "$vNameOfProcess$" and assign output to $vNameOfProcess$ 
+15	     String Operation: Trim "$vNameOfProcess$" and assign output to $vNameOfProcess$
+16	     Variable Operation: $AAApplicationPath$\Automation Anywhere\My Docs\$vNameOfDepartment$\$vNameOfProcess$\Config\ConfigFile_Local.txt To $vConfigPath$
+17	     Comment: ==============================================================================================
+18	     Loop
+19	          If $vSubTaskErrorMessage$ Not Equal To (<>) "" Then  
+11	               Exit Loop
+33	          Else
+43	               Run Task "$AAApplicationPath$\Automation Anywhere\My Tasks\CommonUtilities\Debug Log Task.atmx" @Repeat: Do Not Repeat @Speed: Normal Speed @Pass Variable as argument: $vConfigPath$; $vDescription$; $inLoopTask$
+33	          End If
+19	          If $vSubTaskErrorMessage$ Not Equal To (<>) "" Then  
+11	               Run Task "$AAApplicationPath$\Automation Anywhere\My Tasks\CommonUtilities\Debug Log Task.atmx" @Repeat: Do Not Repeat @Speed: Normal Speed @Pass Variable as argument: $vConfigPath$; $vDescription$; $inLoopTask$
+33	          End If
+33	     End Loop
+20	     Variable Operation: Reinitialize $vBotName$
+21	     Variable Operation: Reinitialize $vProcessName$
+22	     Variable Operation: Reinitialize $vDepartmentName$
+23	     Variable Operation: Reinitialize $vIsProductionMode$
+24	     Variable Operation: Reinitialize $vDelayAvg$
+25	     Variable Operation: Reinitialize $vDelayMax$
+26	     Variable Operation: Reinitialize $vDelayMin$
+27	     Variable Operation: Reinitialize $vEmailFrom$
+28	     Variable Operation: Reinitialize $vEmailFromOnError$
+29	     Variable Operation: Reinitialize $vEmailTo$
+30	     Variable Operation: Reinitialize $vEmailToOnError$
+31	     Variable Operation: Reinitialize $vPathAuditTrails$
+32	     Variable Operation: Reinitialize $vPathErrorLogs$
+33	     Variable Operation: Reinitialize $vPathErrorScreenshot$
+34	     Variable Operation: -----Task started----- To $vDescription$
+35	     Run Task "$AAApplicationPath$\Automation Anywhere\My Tasks\CommonUtilities\Debug Log Task.atmx" @Repeat: Do Not Repeat @Speed: Normal Speed @Pass Variable as argument: $vConfigPath$; $vDescription$; $vTaskName$
+36	     Comment: ============================= Call all task ========================================================
+37	     Variable Operation: $vProcessName$_SubTask.atmx To $vSubTaskName$
+38	     Run Task "$AAApplicationPath$\Automation Anywhere\My Tasks\$vDepartmentName$\$vProcessName$\$vSubTaskName$" @Repeat: Do Not Repeat @Speed: Normal Speed @Pass Variable as argument: $vSubTaskErrorMessage$
+39	     If $vSubTaskErrorMessage$ Not Equal To (<>) "" Then  
+40	          Variable Operation: -----Task Error----- To $vDescription$
+41	          Run Task "$AAApplicationPath$\Automation Anywhere\My Tasks\CommonUtilities\Debug Log Task.atmx" @Repeat: Do Not Repeat @Speed: Normal Speed @Pass Variable as argument: $vConfigPath$; $vDescription$; $vSubTaskName$
+42	          Variable Operation: Unable to run task. To $vDescription$
+43	          Log to File: ,ERROR,$Machine$,$vSubTaskName$,$vDescription$,$vSubTaskErrorMessage$ in "$vPathErrorLogs$"
+44	     End If
+45	     If Window Exists ("main.txt - sakura 2.2.0.1  ")  Then  
+46	          Run Task "$AAApplicationPath$\Automation Anywhere\My Tasks\$vDepartmentName$\$vProcessName$\$vSubssssssTaskName$" @Repeat: Do Not Repeat @Speed: Normal Speed @Pass Variable as argument: $vSubTaskErrorMessage$
+47	     Else If File Does Not Exist ("C:\temp\main_out.txt")  Then  
+48	          Stop The Current Task
+49	     End If
+50	     Comment: ========================= Getting Task Name ====================================================
+51	     String Operation: Replace ".*\\([\w]+\.atmx)$" with "$1" in "$AATaskName$" and assign output to $vTaskName$ 
+52	     String Operation: Reverse "$AATaskName$" and assign output to $vTaskName$
+53	     String Operation: Before-After "$vTaskName$"; After: "\" and assign output to $vTaskName$
+54	     String Operation: Reverse "$vTaskName$" and assign output to $vTaskName$
+55	     Comment: ============================= Task End =========================================================
+56	     Variable Operation: -----Task Ended----- To $vDescription$
+57	     Run Logic "$AAApplicationPath$\Automation Anywhere\My Tasks\CommonUtilities\Debug Log Task.mbot" @Repeat: Do Not Repeat @Speed: Normal Speed @Pass Variable as argument: $vConfigPath$; $vDescription$; $vTaskName$
+11	     Stop The Current Task
+58	End Error Handling
