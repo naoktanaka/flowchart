@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="style.css">
+    <script src="lib\ramda.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="lib/raphael-min.js"></script>
+    <script src="lib/flowchart-latest.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <header>
+        AAフローチャート作成ツール
+    </header>
+    <div id="mode">
+        <input type="radio" name="mode" id="radio_main" value="main" checked>
+        <label for="radio_main">メインタスク用</label>
+        <input type="radio" name="mode" id="radio_sub" value="sub">
+        <label for="radio_sub">サブタスク用</label>
+    </div>
+    <div id="dropzone" effectAllowed="move">
+        AAでexportしたファイルをドロップ！!
+    </div>
+
+    <div id="contents">
+        <div id="chart" hidden></div>
+        <div id="proc" hidden>
+            <ol>
+                処理一覧
+                <li v-for="(item, index) in procList" :key="index">{{item}}
+                    <input v-if="item.match(/\$.*\$/)" type="button" value="処理名変更" @click="modify(index)">
+                </li>
+            </ol>
+        </div>
+    </div>
+
+
+    <script src="proc.js"></script>
+    <script src="chart.js"></script>
+    <script src="dropFile.js"></script>
+</body>
+
+</html>
